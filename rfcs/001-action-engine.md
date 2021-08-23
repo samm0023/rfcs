@@ -69,6 +69,17 @@ For public API calls from receiver or action pages , it will be important to alw
 - visitor uuid
 - action uuid
 
+To return the action list to UI mobile the engine must to acomplish with the next structure:
+```js
+  [{
+    screenName:"dac.ContentPreview"
+    title: 'Dealer Content',
+    key: 'dealer-content',
+    reasonEn: `learn more about our current offers`,
+    reasonEs: `aprender más sobre nuestras ofertas actuales`
+    attributes:{}
+  }]
+```
 # Motivation
 
 We need to make the necessary changes to provide a clean structure for our action engine , allowing use a good structure for future growth
