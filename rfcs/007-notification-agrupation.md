@@ -62,7 +62,7 @@ This solution will cotain:
      *
      * @return bool
      */
-    private function isGroupable() : ?int
+    protected function isGroupable() : ?int
     {
         $notificationId = null;
         $notification = Notifications::findFirst([
@@ -136,9 +136,9 @@ This solution will cotain:
         } else {
             $this->currentNotification = Notifications::findFirstById($isGroupable);
             $this->groupNotification();
-            $this->currentNotification->saveOrFail();
-
         }
+
+        $this->currentNotification->saveOrFail();
 
         return true;
     }
