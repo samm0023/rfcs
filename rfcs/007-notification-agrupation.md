@@ -65,22 +65,17 @@ This solution will cotain:
     protected function isGroupable() : ?int
     {
         $notificationId = null;
-        $notification = Notifications::findFirst([
-            'conditions' => '\notification_type_id = :notificationTypeId: AND entity_id = :entityId:',
-            'bind' => [
-                'notificationTypeId' => $this->type->getId(),
-                'entityId' => $this->entity->getId()
-            ],
-            'order' => 'updated_at DESC'
-        ]);
 
-        $startingTime = Carbon::now();
-        $notificationTime = Carbon::parse($notification->updated_at);
+        $sql = "SELECT * FROM notifications
+        WHERE notification_type_id = {$this->type->getId()}
+        AND entity_id = {$this->entity->getId()}
+        AND TIMESTAMPDIFF(MINUTE, updated_at, CURDATE()) between {$this->softCap} and {$this->hardCap}
+        order by updated_at DESC limit 1";
 
-        $diffTime = $notificationTime->diffInMinutes($startingTime);
+        $notification = Notifications::findByRawSql($sql);
 
-        if($diffTime >= $this->softCap && $diffTime <= $this->hardCap){
-            $notificationId = $notification->getId();
+        if(!empty($notification->toArray())){
+            $notificationId = (int) $notification[0]->id;
         }
 
         return $notificationId;
@@ -90,16 +85,31 @@ This solution will cotain:
 - We're gonna add a private agrupation method:
 
 ```php
-
     /**
      * Groups a set of notifications.
      *
      * @return void
      */
-    private function groupNotification() : void
+    protected function groupNotification() : void
     {
-        $notificationGroup = json_decode($this->currentNotification->group);
-        $notificationGroup->from_users[] = $this->fromUser->getId();
+        $notificationGroup = $this->currentNotification->group;
+        
+        if(is_null($this->currentNotification->group)) {
+            $notificationGroup->group = [
+                'from_users' => [
+                    "id" => $this->fromUser->getId(),
+                    "name" => $this->fromUser->displayname,
+                ]
+            ];
+        }
+        else {
+            $notificationGroup = json_decode($this->currentNotification->group);
+            $notificationGroup->from_users[] = [
+                "id" => $this->fromUser->getId(),
+                "name" => $this->fromUser->displayname,
+            ];
+        }
+
         $this->currentNotification->group = json_encode($notificationGroup);
     }
 ```
