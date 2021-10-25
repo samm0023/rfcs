@@ -112,21 +112,21 @@ This solution will cotain:
     protected function groupNotification() : void
     {
         $notificationGroup = $this->currentNotification->group;
-        
+        $currentUser = [
+            "id" => $this->fromUser->getId(),
+            "name" => $this->fromUser->displayname,
+            "photo" => $this->fromUser->getPhoto()
+            
+        ];
+
         if(is_null($this->currentNotification->group)) {
             $notificationGroup->group = [
-                'from_users' => [
-                    "id" => $this->fromUser->getId(),
-                    "name" => $this->fromUser->displayname,
-                ]
+                'from_users' => $currentUser
             ];
         }
         else {
             $notificationGroup = json_decode($this->currentNotification->group);
-            $notificationGroup->from_users[] = [
-                "id" => $this->fromUser->getId(),
-                "name" => $this->fromUser->displayname,
-            ];
+            $notificationGroup->from_users[] = $currentUser;
         }
 
         $this->currentNotification->group = json_encode($notificationGroup);
