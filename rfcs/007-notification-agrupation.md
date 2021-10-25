@@ -18,16 +18,23 @@ This solution will cotain:
     /**
      * The minimum time to consider before grouping notifications.
      *
-     * @var bool
+     * @var int
      */
     protected int $softCap = 1;
 
     /**
      * The maximun time to consider before grouping notifications.
      *
-     * @var bool
+     * @var int
      */
     protected int $hardCap = 5;
+
+    /**
+     * Allows notifications to be groupable or not groupable.
+     *
+     * @var bool
+     */
+    protected bool $groupable = false;
 
     /**
      * Set the soft cap.
@@ -52,6 +59,18 @@ This solution will cotain:
     {
         $this->hardCap = $hardCap;
     }
+
+    /**
+     * Set groupable flag.
+     *
+     * @param bool $hardCap
+     *
+     * @return void
+     */
+    public function setGroupable(bool $groupable) : void
+    {
+        $this->groupable = $groupable;
+    }
 ```
 
 - We're gonna add a private method to determinates if the notification need to be a group:
@@ -69,7 +88,7 @@ This solution will cotain:
         $sql = "SELECT * FROM notifications
         WHERE notification_type_id = {$this->type->getId()}
         AND entity_id = {$this->entity->getId()}
-        AND TIMESTAMPDIFF(MINUTE, updated_at, CURDATE()) between {$this->softCap} and {$this->hardCap}
+        AND TIMESTAMPDIFF(MINUTE, CURDATE(), updated_at) between {$this->softCap} and {$this->hardCap}
         order by updated_at DESC limit 1";
 
         $notification = Notifications::findByRawSql($sql);
@@ -128,7 +147,7 @@ This solution will cotain:
         $app = Di::getDefault()->get('app');
 
         //verify if need to be a group
-        $isGroupable = $this->isGroupable();
+        $isGroupable = ($this->groupable) ? $this->isGroupable() : null;
 
         //save to DB
         if(is_null($isGroupable)){
