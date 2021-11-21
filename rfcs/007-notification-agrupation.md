@@ -5,9 +5,9 @@
 
 Some times many users can interact with a single entity resulting in alot of notifications, we're attempting to solve this by creating a notification groping functionality that allows Kanvas to group notification if there are various notifications in a given period of time.
 
-This solution will cotain:
+This solution will contain:
 - A flag to turn on and off this feature
-- A soft cap and a hard cap to set the time of the agrupation
+- A soft cap and a hard cap to set the time of the grouping
 - A grouping mechanism based on the soft and hardcap
 
 # Example
@@ -77,7 +77,7 @@ This solution will cotain:
 
 ```php
     /**
-     * Identify if notifcationes should be a group.
+     * Identify if notification's should be a group.
      *
      * @return bool
      */
@@ -177,7 +177,7 @@ This solution will cotain:
 
 # Motivation
 
-Enchance the way end users use notifications.
+Enhance the way end users use notifications.
 
 # Detailed design
 
