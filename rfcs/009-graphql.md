@@ -44,16 +44,29 @@ trait GraphQLIndexable
   }
 }
 
+Class LeadsHasura extends PostgresBaseModel
+{
+  public string $title;
+  public int $user_id;
+
+  public function add(ModelInterface $entity)
+  {
+    $this->title = $entity->title;
+    $this->users_id = $entity->user_id;
+    return $this->saveOrFail();
+  }
+}
+
 ```
 
 # Motivation
 
-Follow pipe use case https://hasura.io/case-studies/pipe/  , use graphql has our query endpoints for fast iteration and hasure with postgres as our noSQL database to replace elastic.
+Follow pipe use case https://hasura.io/case-studies/pipe/  , use graphql has our query endpoints for fast iteration and hasura with postgres as our noSQL database to replace elastic.
 
 # Detailed design
 
  - Use Hasura instead of developing our full graphql CRUD
- - Use postgresSQL as our elasticsearch replacements for extendable querable endpoints 
+ - Use postgresSQL as our elasticsearch replacements for extendable queryable endpoints 
  - Had native Hasura support to baka
 
 # Tradeoffs
