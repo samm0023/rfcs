@@ -12,17 +12,24 @@ Action Page Flow [Diagram](https://viewer.diagrams.net/?highlight=0000ff&edit=_b
 
 **Entities**
 - **Action**: Holds all actions of the system.
-- **Action Type**: Types of action system will support product, document, forms, commerce, etc , 
-- **Action Workflow**: List of the default workflows system requires this action to execute once it ends.
+- **Action Type**: Define the type of action if single step or multi step
+- **Action System Type**: Types of action system will support product, document, forms, commerce, etc , 
+- **Action Workflow**: Releated ids of Kanvas workflow rules this action will use by default
 - **Action Systems**: Each action type will be powered by its own system domain , in order to encapsulate system complexity . Example: Forms, Commerce and Content will each have its own set of features 
 - **Action data type** : Specify the datatype this action will use. We define here the json structure the action expect the frontend to send , if the frontend structure doesn't match all the required fields in the data type, backend will throw a exception 
-- **Action companies** : Reference what action is this company has
-- **Action companies receivers** : UUID identifier to match external request from the frontend to a specific Action. 
-- **Action companies workflow** : Besides the default action workflow , specify custom workflow created by the user withing this company
+- **Companies Actions** : List of action the user company is using or created
+- **Companies Actions Visitors** : Each user visit to the action page will be logged here
+- **Action companies workflow** : Add any aditional workflow for a action on a specific company
 - **Action companies systems modules** : Specify the list of entities from a specific action system tied to this action . Example: we would hold here the list of products, content, form referenced use in this action for the specific company in order to generate the action page.
 - **Engagement** : Result of the current lead interaction with a action page. Main thing to point out is the changes of the action stage and the reference to the message id which is the json object of the result interaction
 - **Business Verticals** : List of industries the system will have default actions
+- **Pipelines** : What are the different stages a action can take
+- **Action Messages** : Template for the action msg sent to the user for each stage (welcome msg, share msg, post msg, push msg, etc , defaults from the system and  can be modified by the user)
+- **Express entity variable** : List of the entity avaiable variables so the frontend can display on the action engine UI 
 
+
+Todo:
+- **Custom field subsystem**  : 
 # Structure
 
 Since our action engine at the end of the day is based on 3 system, CRM, PIM and Actions but at this moment we dont want to have to manage 3 different API's lets follow the same DDD as we did in NZXT but update it based on a proper [DDD](https://stitcher.io/blog/laravel-beyond-crud-01-domain-oriented-laravel)
@@ -50,7 +57,7 @@ Since our action engine at the end of the day is based on 3 system, CRM, PIM and
   - Leads
   - Products
   - ActionsEngine
-- Libraries
+- Libraries (aka infrastructure)
 - Cli
 - Storage
 
